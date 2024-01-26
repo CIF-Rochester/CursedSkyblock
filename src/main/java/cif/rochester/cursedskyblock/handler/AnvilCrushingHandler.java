@@ -68,7 +68,7 @@ public class AnvilCrushingHandler implements Listener {
             return true;
         });
         //Dirt to various plants
-        ChanceDrop.ChanceList<Material> dirtDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.WHEAT_SEEDS,0.01),ChanceDrop.of(Material.FERN,0.01),ChanceDrop.of(Material.GRASS,0.01),ChanceDrop.of(Material.DEAD_BUSH,0.01),ChanceDrop.of(Material.BEETROOT_SEEDS,0.01),ChanceDrop.of(Material.SWEET_BERRIES,0.01));
+        ChanceDrop.ChanceList<Material> dirtDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.WHEAT_SEEDS,0.03),ChanceDrop.of(Material.FERN,0.01),ChanceDrop.of(Material.GRASS,0.01),ChanceDrop.of(Material.DEAD_BUSH,0.01),ChanceDrop.of(Material.BEETROOT_SEEDS,0.02),ChanceDrop.of(Material.SWEET_BERRIES,0.01));
         juiceResult(Material.DIRT,cauldron->{
             World w = cauldron.getWorld();
             Location dropSpot = cauldron.getLocation();
@@ -88,16 +88,17 @@ public class AnvilCrushingHandler implements Listener {
         });
         //Leaves to Water (also has a sapling and apple drop chance)
         Function<Block,Boolean> waterCauldron = cauldron->{
-            if(cauldron.getType() == Material.CAULDRON){
-                cauldron.setType(Material.WATER_CAULDRON);
-                Levelled levelled = (Levelled) cauldron.getBlockData();
-                levelled.setLevel(levelled.getMinimumLevel());
-                cauldron.setBlockData(levelled);
-            }
-            else{
-                Levelled levelled = (Levelled) cauldron.getBlockData();
-                levelled.setLevel(Math.min(levelled.getLevel()+1,levelled.getMaximumLevel()));
-                cauldron.setBlockData(levelled);
+            if(rand.nextDouble(1) < 0.2) {
+                if (cauldron.getType() == Material.CAULDRON) {
+                    cauldron.setType(Material.WATER_CAULDRON);
+                    Levelled levelled = (Levelled) cauldron.getBlockData();
+                    levelled.setLevel(levelled.getMinimumLevel());
+                    cauldron.setBlockData(levelled);
+                } else {
+                    Levelled levelled = (Levelled) cauldron.getBlockData();
+                    levelled.setLevel(Math.min(levelled.getLevel() + 1, levelled.getMaximumLevel()));
+                    cauldron.setBlockData(levelled);
+                }
             }
             Material leafType = cauldron.getRelative(BlockFace.UP,2).getType();
             if(rand.nextDouble(1.0) < 0.04){
@@ -105,6 +106,9 @@ public class AnvilCrushingHandler implements Listener {
             }
             if((leafType == Material.OAK_LEAVES || leafType == Material.DARK_OAK_LEAVES) && rand.nextDouble(1.0) < 0.02){
                 cauldron.getWorld().dropItem(cauldron.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.APPLE));
+            }
+            if((leafType == Material.JUNGLE_LEAVES) && rand.nextDouble(1.0) < 0.02){
+                cauldron.getWorld().dropItem(cauldron.getLocation().add(0.5, 0.5, 0.5), new ItemStack(Material.COCOA_BEANS));
             }
             return true;
         };
@@ -143,14 +147,39 @@ public class AnvilCrushingHandler implements Listener {
             }
             return true;
         });
-        //Magma blocks to Lava (alternate source of lava)
-        addResult(Material.MAGMA_BLOCK,Material.LAVA);
-        juiceResult(Material.SAND,cauldron->{
+        //Magma_Block to lava
+        juiceResult(Material.MAGMA_BLOCK,cauldron->{
             cauldron.setType(Material.LAVA_CAULDRON);
             return true;
         });
+        //Moss to lush cave blocks
+        ChanceDrop.ChanceList<Material> mossDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.GLOW_BERRIES,0.03),ChanceDrop.of(Material.AZALEA,0.03),ChanceDrop.of(Material.FLOWERING_AZALEA,0.03),ChanceDrop.of(Material.SMALL_DRIPLEAF,0.03),ChanceDrop.of(Material.BIG_DRIPLEAF,0.02),ChanceDrop.of(Material.SPORE_BLOSSOM,0.02));
+        juiceResult(Material.MOSS_BLOCK,cauldron->{
+            World w = cauldron.getWorld();
+            Location dropSpot = cauldron.getLocation();
+            mossDrops.roll(rand,material->{
+                w.dropItem(dropSpot.add(0.5, 0.5, 0.5), new ItemStack(material));
+            });
+            return true;
+        });
+        //Stone to Netherrack
+        lavaBatheResult(Material.STONE,cauldron->{
+            cauldron.setType(Material.CAULDRON);
+            World w = cauldron.getWorld();
+            Location dropSpot = cauldron.getLocation();
+            w.dropItem(dropSpot.add(0.5, 0.5, 0.5), new ItemStack(Material.NETHERRACK));
+            return true;
+        });
+        //Water to Obsidian
+        lavaBatheResult(Material.WATER,cauldron->{
+            cauldron.setType(Material.CAULDRON);
+            World w = cauldron.getWorld();
+            Location dropSpot = cauldron.getLocation();
+            w.dropItem(dropSpot.add(0.5, 0.5, 0.5), new ItemStack(Material.OBSIDIAN));
+            return true;
+        });
         //Dripstone Source
-        addResult(Material.STONE,Material.WATER,Material.DRIPSTONE_BLOCK);
+        addResult(Material.WATER,Material.STONE,Material.DRIPSTONE_BLOCK);
         //Initial Dirt source
         addResult(Material.SAND,Material.GRAVEL,Material.DIRT);
         //Stone to Sand.
@@ -159,8 +188,6 @@ public class AnvilCrushingHandler implements Listener {
         addResult(Material.GRAVEL,Material.SAND);
         //Sand to Clay.
         addResult(Material.WATER,Material.SAND,Material.CLAY);
-        //Stone to Netherrack
-        addResult(Material.LAVA,Material.STONE,Material.NETHERRACK);
         //Red Sand
         addResult(Material.RED_SANDSTONE,Material.RED_SAND);
         addResult(Material.SANDSTONE,Material.SAND);
@@ -184,7 +211,7 @@ public class AnvilCrushingHandler implements Listener {
         //Sponge
         addResult(Material.SLIME_BLOCK,Material.YELLOW_WOOL,Material.SPONGE);
         //Blue ice obtaining.
-        addResult(Material.ICE,Material.PACKED_ICE);
+        addResult(Material.ICE, Material.ICE,Material.PACKED_ICE);
         addResult(Material.PACKED_ICE,Material.PACKED_ICE,Material.BLUE_ICE);
         //Sus blocks
         addResult(Material.TERRACOTTA,Material.SAND,Material.SUSPICIOUS_SAND);
@@ -206,11 +233,27 @@ public class AnvilCrushingHandler implements Listener {
             if(Util.inBounds(l.clone().add(0,-2,0))){
                 if(l.clone().add(0,-1,0).getBlock().getType() == Material.IRON_BARS){
                     Block destination = l.clone().add(0,-2,0).getBlock();
-                    if(destination.getType() == Material.CAULDRON){
+                    if(destination.getType() == Material.CAULDRON || destination.getType() == Material.WATER_CAULDRON){
                         if(result.apply(destination)){
                             l.getBlock().setType(Material.AIR);
                             return true;
                         }
+                    }
+                }
+            }
+            return false;
+        };
+        crushResults.computeIfAbsent(input,k->new ArrayList<>()).add(r);
+    }
+
+    public static void lavaBatheResult(Material input, Function<Block,Boolean> result){
+        CrushResult r = (l)->{
+            if(Util.inBounds(l.clone().add(0,-1,0))){
+                Block destination = l.clone().add(0,-1,0).getBlock();
+                if(destination.getType() == Material.LAVA_CAULDRON){
+                    if(result.apply(destination)){
+                        l.getBlock().setType(Material.AIR);
+                        return true;
                     }
                 }
             }
@@ -272,11 +315,14 @@ public class AnvilCrushingHandler implements Listener {
             BlockData data = entity.getBlockData();
             Material material = data.getMaterial();
             if(material == Material.ANVIL || material == Material.CHIPPED_ANVIL || material == Material.DAMAGED_ANVIL){
-                Location crushed = entity.getLocation().clone().add(0,-1,0);
-                if(Util.inBounds(crushed)) {
+                Location crushed = entity.getLocation().clone();
+                if(!event.getBlock().isLiquid()) {
+                    crushed = crushed.add(0, -1, 0);
+                }
+                if (Util.inBounds(crushed)) {
                     Block block = crushed.getBlock();
                     List<CrushResult> possibleResults = crushResults.get(block.getType());
-                    if(possibleResults != null) {
+                    if (possibleResults != null) {
                         for (CrushResult crushResult : possibleResults) {
                             if (crushResult.apply(crushed)) {
                                 return;

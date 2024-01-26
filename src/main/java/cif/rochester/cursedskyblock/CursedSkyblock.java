@@ -1,10 +1,11 @@
 package cif.rochester.cursedskyblock;
 
+import cif.rochester.cursedskyblock.commands.WikiCommand;
 import cif.rochester.cursedskyblock.handler.*;
 import cif.rochester.cursedskyblock.lib.NMSHelper;
 import cif.rochester.cursedskyblock.generation.VoidGenerator;
-import com.vicious.cursedskyblock.handler.*;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,6 +27,10 @@ public final class CursedSkyblock extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PistonEventHandler(),this);
         Bukkit.getPluginManager().registerEvents(new RandomTickHandler(),this);
         Bukkit.getPluginManager().registerEvents(new GrassBonemealingHandler(),this);
+        Bukkit.getPluginManager().registerEvents(new TwerkSimHandler(),this);
+        Bukkit.getPluginManager().registerEvents(new StoneBonemealingHandler(),this);
+        CommandMap map = Bukkit.getCommandMap();
+        map.register("cswiki","cursedskyblock",new WikiCommand());
     }
 
     private final VoidGenerator generator = new VoidGenerator();

@@ -71,9 +71,9 @@ public class GrassBonemealingHandler implements Listener {
             while (!location.getBlock().isSolid() && Util.inBounds(location)) {
                 location = location.clone().add(0, -1, 0);
             }
-            if (location.getBlock().getType() == Material.GRASS) {
+            if (location.getBlock().getType() == Material.GRASS_BLOCK) {
                 Block target = location.getBlock().getRelative(BlockFace.UP);
-                if (Util.isAir(target)) {
+                if (Util.isAir(target) || target.getType() == Material.GRASS) {
                     if(options.size() > 0) {
                         target.setType(options.get(rand.nextInt(options.size())));
                     }

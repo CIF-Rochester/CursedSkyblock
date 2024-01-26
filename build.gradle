@@ -26,8 +26,19 @@ repositories {
     }
 }
 
+configurations {
+    embed
+    implementation.extendsFrom(embed)
+}
+
+shadowJar {
+    configurations = [project.configurations.embed]
+    archiveClassifier=""
+    exclude "META-INF/versions/9/module-info.class"
+}
+
 dependencies {
-    implementation "com.vicious:viciouslib:17-3.5.7"
+    embed "com.vicious:viciouslib:17-3.5.7"
     runtimeOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
 }

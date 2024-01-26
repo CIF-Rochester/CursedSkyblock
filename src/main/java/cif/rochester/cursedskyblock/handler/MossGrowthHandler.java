@@ -6,11 +6,12 @@ import cif.rochester.cursedskyblock.WeightedList;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.SculkVein;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockFertilizeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -29,17 +30,18 @@ public class MossGrowthHandler implements Listener {
         options.put(Biome.OLD_GROWTH_SPRUCE_TAIGA,MossOption.PODZOL);
     }
     @EventHandler
-    public void onMossGrowth(BlockFertilizeEvent event){
-        if(event.getBlock().getType() == Material.MOSS_BLOCK){
-            MossOption option = options.get(event.getBlock().getComputedBiome());
+    public void onMossGrowth(PlayerInteractEvent event){
+        Block b = event.getClickedBlock();
+        if(b != null && b.getType() == Material.MOSS_BLOCK){
+            MossOption option = options.get(b.getComputedBiome());
             if(option != null){
-                event.setCancelled(true);
-                if(event.getPlayer() != null) {
-                    ItemStack stack = event.getPlayer().getActiveItem();
-                    stack.setAmount(stack.getAmount() - 1);
-                    event.getPlayer().setItemInHand(stack);
+                ItemStack stack = event.getItem();
+                if(stack != null && stack.getType() == Material.BONE_MEAL){
+                    stack.setAmount(stack.getAmount()-1);
+                    event.getPlayer().getInventory().setItem(event.getHand(),stack);
+                    spread(b.getLocation(),option);
+                    event.setCancelled(true);
                 }
-                spread(event.getBlock().getLocation(),option);
             }
         }
     }
@@ -83,8 +85,8 @@ public class MossGrowthHandler implements Listener {
     private enum MossOption{
         CRIMSON(Material.NETHERRACK,Material.CRIMSON_NYLIUM, BlockWeights.of("CRIMSON")),
         WARPED(Material.NETHERRACK,Material.WARPED_NYLIUM,BlockWeights.of("WARPED")),
-        MYCELIUM(Material.DIRT,Material.MYCELIUM,BlockWeights.of("MYCELIUM")),
-        PODZOL(Material.GRASS,Material.PODZOL,BlockWeights.of("PODZOL")),
+        MYCELIUM(Material.GRASS_BLOCK,Material.MYCELIUM,BlockWeights.of("MYCELIUM")),
+        PODZOL(Material.GRASS_BLOCK,Material.PODZOL,BlockWeights.of("PODZOL")),
         DARK(Material.DEEPSLATE,Material.SCULK,BlockWeights.of("DARK")){
             @Override
             public void apply(Location location) {
@@ -159,10 +161,12 @@ public class MossGrowthHandler implements Listener {
         public void apply(Location location){
             if(location.getBlock().getType() == replaced || location.getBlock().getType() == getReplaced()){
                 location.getBlock().setType(replacement);
+                Util.fertilize(location);
                 if(rand.nextDouble(1.0) < 0.5){
                     location = location.clone().add(0,1,0);
                     if(Util.inBounds(location) && !location.getBlock().isSolid() && !location.getBlock().isLiquid()){
                         location.getBlock().setType(weights.getRandom(rand).getMaterial());
+                        Util.fertilize(location);
                     }
                 }
             }

@@ -1,10 +1,8 @@
 package cif.rochester.cursedskyblock;
 
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.CaveVinesPlant;
 
 public class Util {
     public static Location findGround(Location location){
@@ -52,7 +50,18 @@ public class Util {
         return location.getBlock();
     }
 
-    private static boolean isSolid(Location location) {
+    public static boolean isSolid(Location location) {
         return location.getBlock().isSolid();
+    }
+
+    public static void fertilize(Location location){
+        location.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, location.getX() + 0.5, location.getY() + 0.5, location.getZ() + 0.5, 5, 0.6, 0.1, 0.6);
+    }
+
+    public static void fertilizeCaveVine(Block b){
+        CaveVinesPlant plant = (CaveVinesPlant) b.getBlockData();
+        plant.setBerries(true);
+        b.setBlockData(plant);
+        fertilize(b.getLocation());
     }
 }
