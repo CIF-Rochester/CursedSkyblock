@@ -32,11 +32,10 @@ public class TwerkSimHandler implements Listener {
     private final Map<UUID, AtomicLong> playerTwerks = new HashMap<>();
     public TwerkSimHandler(){
         Bukkit.getScheduler().scheduleSyncRepeatingTask(CursedSkyblock.instance,()->{
-
             for (AtomicLong value : playerTwerks.values()) {
                 value.getAndDecrement();
             }
-        },200L,200L);
+        },400L,400L);
     }
 
     @EventHandler
