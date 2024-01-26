@@ -10,13 +10,13 @@ In bukkit.yml, add the following lines to the end of the text file:
 
 ```yaml
 worlds:
-  <world>:
+  (world):
     generator: cursedskyblock
-  <world>_nether:
+  (world)_nether:
     generator: cursedskyblock
 ```
 
-Replace "<world>" with the **level-name** value in **server.properties**. If you have done this correctly, generating a new world will make both the overworld and the nether empty voids. If you want to make the end a void too add a line for <world>_the_end, this is not recommended though.
+Replace "(world)" with the **level-name** value in **server.properties**. If you have done this correctly, generating a new world will make both the overworld and the nether empty voids. If you want to make the end a void too add a line for (world)_the_end, this is not recommended though.
 
 Start your server, and you should be good to play!
 
