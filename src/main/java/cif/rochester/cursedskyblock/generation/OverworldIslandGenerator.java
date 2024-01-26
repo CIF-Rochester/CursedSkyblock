@@ -2,7 +2,6 @@ package cif.rochester.cursedskyblock.generation;
 
 import org.bukkit.Material;
 import org.bukkit.block.data.Levelled;
-import org.bukkit.block.data.type.CaveVines;
 import org.bukkit.block.data.type.CaveVinesPlant;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.Vector;
@@ -108,23 +107,15 @@ public class OverworldIslandGenerator {
         for (Vector location : locations) {
             int length = rand.nextInt(1,maxLength+1);
             for (int i = 0; i < length; i++) {
-                Vector l = location.add(new Vector(0,-i,0));
-                if(i != length-1) {
-                    set(data, l, Material.CAVE_VINES_PLANT);
+                Vector l = location.clone().add(new Vector(0,-i,0));
+                //if(i != length-1) {
+                    set(data, l, Material.CAVE_VINES);
                     if (Math.random() > 0.5) {
                         CaveVinesPlant plant = (CaveVinesPlant) data.getBlockData(l.getBlockX(), l.getBlockY(), l.getBlockZ());
                         plant.setBerries(true);
                         data.setBlock(l.getBlockX(), l.getBlockY(), l.getBlockZ(), plant);
                     }
-                }
-                else{
-                    set(data,l,Material.CAVE_VINES);
-                    if (Math.random() > 0.5) {
-                        CaveVines plant = (CaveVines) data.getBlockData(l.getBlockX(), l.getBlockY(), l.getBlockZ());
-                        plant.setBerries(true);
-                        data.setBlock(l.getBlockX(), l.getBlockY(), l.getBlockZ(), plant);
-                    }
-                }
+                //}
             }
         }
     }

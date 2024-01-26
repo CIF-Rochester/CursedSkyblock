@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.CaveVinesPlant;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -48,19 +49,30 @@ public class TwerkSimHandler implements Listener {
                     for (int z = 0; z < 3; z++) {
                         for (int y = 0; y < 1; y++) {
                             Block b = l.clone().add(x, -y, z).getBlock();
-                            TreeType type = treeTypes.get(b.getType());
                             boolean success = false;
-                            if (type != null) {
+                            if(b.getBlockData() instanceof CaveVinesPlant plant){
                                 if (shouldApply(event.getPlayer().getUniqueId())) {
                                     Util.fertilize(b.getLocation());
                                     if (rand.nextDouble(1.0) > 0.5) {
-                                        b.setType(Material.AIR);
-                                        b.getWorld().generateTree(b.getLocation(), type);
+                                        Util.fertilizeCaveVine(b);
                                         success = true;
                                     }
                                 }
                             }
-                            if(success) {
+                            else {
+                                TreeType type = treeTypes.get(b.getType());
+                                if (type != null) {
+                                    if (shouldApply(event.getPlayer().getUniqueId())) {
+                                        Util.fertilize(b.getLocation());
+                                        if (rand.nextDouble(1.0) > 0.5) {
+                                            b.setType(Material.AIR);
+                                            b.getWorld().generateTree(b.getLocation(), type);
+                                            success = true;
+                                        }
+                                    }
+                                }
+                            }
+                            if (success) {
                                 getCount(event.getPlayer().getUniqueId()).getAndIncrement();
                             }
                         }
