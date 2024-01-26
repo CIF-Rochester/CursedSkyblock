@@ -35,7 +35,7 @@ public class TwerkSimHandler implements Listener {
             for (AtomicLong value : playerTwerks.values()) {
                 value.getAndDecrement();
             }
-        },400L,400L);
+        },2400L,2400L);
     }
 
     @EventHandler
