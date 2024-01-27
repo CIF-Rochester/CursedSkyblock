@@ -38,7 +38,7 @@ shadowJar {
 }
 
 dependencies {
-    embed "com.vicious:viciouslib:17-3.5.7"
+    embed "com.vicious:viciouslib:17-3.5.9"
     runtimeOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
     compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
 }

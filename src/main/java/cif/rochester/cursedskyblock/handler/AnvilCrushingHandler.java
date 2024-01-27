@@ -181,7 +181,7 @@ public class AnvilCrushingHandler implements Listener {
         //Dripstone Source
         addResult(Material.WATER,Material.STONE,Material.DRIPSTONE_BLOCK);
         //Initial Dirt source
-        addResult(Material.SAND,Material.GRAVEL,Material.DIRT);
+        addResult(Material.SAND,Material.GRAVEL,Material.COARSE_DIRT);
         //Stone to Sand.
         addResult(Material.STONE,Material.COBBLESTONE);
         addResult(Material.COBBLESTONE,Material.GRAVEL);
