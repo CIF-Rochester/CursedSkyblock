@@ -5,6 +5,7 @@ import cif.rochester.cursedskyblock.WeightedList;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Typing;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Biome;
@@ -27,6 +28,8 @@ public class Formation {
     public Set<NamespacedKey> biomes = new HashSet<>();
     @Save
     public Matcher biomeMatcher = Matcher.ANY;
+    @Save
+    public boolean prioritizeSurfaceBiome = true;
     @Save
     @Typing(Integer.class)
     public Set<Integer> dimensions = new HashSet<>();
@@ -136,7 +139,12 @@ public class Formation {
     }
 
     public boolean biomeMatches(Block b) {
-        return biomeMatcher.matches(biomes,Keys.of(b.getBiome()));
+        if(!prioritizeSurfaceBiome) {
+            return biomeMatcher.matches(biomes, Keys.of(b.getBiome()));
+        }
+        else{
+            return biomeMatcher.matches(biomes, Keys.of(new Location(b.getWorld(),b.getX(),255,b.getZ()).getBlock().getBiome()));
+        }
     }
 
     public boolean dimensionMatches(Block b) {

@@ -41,7 +41,7 @@ public class FormationsConfig implements IPersistent {
                 .addBiomes(Biome.STONY_PEAKS,Biome.JAGGED_PEAKS,Biome.FROZEN_PEAKS)
                 .setBiomeMatcher(Matcher.ONLY)
                 .setMaxY(0)
-                .withReplacements(Material.DEEPSLATE_EMERALD_ORE,3,Material.DEEPSLATE_DIAMOND_ORE,3,Material.DEEPSLATE_LAPIS_ORE,4,Material.DEEPSLATE_REDSTONE_ORE,5,Material.DEEPSLATE_GOLD_ORE,6,Material.DEEPSLATE_IRON_ORE,8,Material.DEEPSLATE_COAL_ORE,4,Material.DEEPSLATE_COPPER_ORE,5,Material.COBBLED_DEEPSLATE,15,Material.DEEPSLATE,20,Material.TUFF,22,Material.RAW_IRON_BLOCK,2,Material.AMETHYST_BLOCK,1)
+                .withReplacements(Material.DEEPSLATE_EMERALD_ORE,4,Material.DEEPSLATE_DIAMOND_ORE,3,Material.DEEPSLATE_LAPIS_ORE,4,Material.DEEPSLATE_REDSTONE_ORE,5,Material.DEEPSLATE_GOLD_ORE,6,Material.DEEPSLATE_IRON_ORE,8,Material.DEEPSLATE_COAL_ORE,2,Material.DEEPSLATE_COPPER_ORE,4,Material.COBBLED_DEEPSLATE,15,Material.DEEPSLATE,21,Material.TUFF,22,Material.RAW_IRON_BLOCK,2,Material.AMETHYST_BLOCK,1)
         );
         formations.add(new Formation(Material.COBBLESTONE)
                 .addBiomes(Biome.STONY_PEAKS,Biome.JAGGED_PEAKS,Biome.FROZEN_PEAKS)
@@ -53,7 +53,7 @@ public class FormationsConfig implements IPersistent {
                 .addBiomes(Biome.STONY_PEAKS,Biome.JAGGED_PEAKS,Biome.FROZEN_PEAKS)
                 .setBiomeMatcher(Matcher.EXCEPT)
                 .setMaxY(0)
-                .withReplacements(Material.DEEPSLATE_DIAMOND_ORE,3,Material.DEEPSLATE_LAPIS_ORE,4,Material.DEEPSLATE_REDSTONE_ORE,5,Material.DEEPSLATE_GOLD_ORE,6,Material.DEEPSLATE_IRON_ORE,8,Material.DEEPSLATE_COAL_ORE,4,Material.DEEPSLATE_COPPER_ORE,5,Material.COBBLED_DEEPSLATE,15,Material.DEEPSLATE,20,Material.TUFF,22,Material.RAW_IRON_BLOCK,2,Material.AMETHYST_BLOCK,1)
+                .withReplacements(Material.DEEPSLATE_DIAMOND_ORE,3,Material.DEEPSLATE_LAPIS_ORE,4,Material.DEEPSLATE_REDSTONE_ORE,5,Material.DEEPSLATE_GOLD_ORE,6,Material.DEEPSLATE_IRON_ORE,8,Material.DEEPSLATE_COAL_ORE,3,Material.DEEPSLATE_COPPER_ORE,4,Material.COBBLED_DEEPSLATE,15,Material.DEEPSLATE,21,Material.TUFF,22,Material.RAW_IRON_BLOCK,2,Material.AMETHYST_BLOCK,1)
         );
         formations.add(new Formation(Material.BASALT)
                 .setDimensionMatcher(Matcher.ONLY)
