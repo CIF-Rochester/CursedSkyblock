@@ -25,6 +25,7 @@ public class Formation extends LocationSpecific<Formation> implements IValidatab
     public CachedKey<BlockData> shutOffBlock = Keys.cached(Material.PACKED_ICE);
     @Save
     public BlockFace shutOffBlockFace = BlockFace.DOWN;
+    @Save
     @Typing(WeightedKey.class)
     public WeightedList<WeightedKey<BlockData>> replacements = new WeightedList<>();
 
