@@ -1,5 +1,6 @@
-package cif.rochester.cursedskyblock.data;
+package cif.rochester.cursedskyblock.data.keys;
 
+import cif.rochester.cursedskyblock.data.Converter;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,6 +15,9 @@ public class Keys {
     public static final NamespacedKey any = of("cursedskyblock:any");
     public static NamespacedKey air = of(Material.AIR);
 
+    public static NamespacedKey of(Object object){
+        return Converter.namespacedKey(object);
+    }
     public static NamespacedKey of(String key){
         return keys.computeIfAbsent(key,k->NamespacedKey.fromString(key));
     }
@@ -33,5 +37,9 @@ public class Keys {
 
     public static NamespacedKey of(BlockState block) {
         return of(block.getType());
+    }
+
+    public static <T> CachedKey<T> cached(Object object) {
+        return new CachedKey<>(of(object));
     }
 }

@@ -39,7 +39,7 @@ public class GrassBonemealingHandler implements Listener {
             Block above = event.getBlock().getRelative(BlockFace.UP,2);
             if(Util.inBounds(above) && Util.isAir(above)){
                 List<Material> options = biomeToSapling.get(above.getBiome());
-                if(!options.isEmpty()) {
+                if(options != null && !options.isEmpty()) {
                     Set<Location> visited = new HashSet<>();
                     spreadRec(above.getLocation(), 3, visited, options);
                 }

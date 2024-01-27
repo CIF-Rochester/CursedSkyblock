@@ -2,9 +2,10 @@ package cif.rochester.cursedskyblock;
 
 import cif.rochester.cursedskyblock.commands.WikiCommand;
 import cif.rochester.cursedskyblock.config.FormationsConfig;
-import cif.rochester.cursedskyblock.data.Keys;
+import cif.rochester.cursedskyblock.config.MossConfig;
+import cif.rochester.cursedskyblock.data.keys.CachedKey;
+import cif.rochester.cursedskyblock.data.keys.Keys;
 import cif.rochester.cursedskyblock.generation.VoidGenerator;
-import cif.rochester.cursedskyblock.handler.*;
 import cif.rochester.cursedskyblock.lib.NMSHelper;
 import com.vicious.viciouslib.LoggerWrapper;
 import com.vicious.viciouslib.persistence.IPersistent;
@@ -30,20 +31,12 @@ public final class CursedSkyblock extends JavaPlugin {
         //Init NMS for better piston control.
         LoggerWrapper.javaLogger = getLogger();
         SerializationHandler.registerHandler(NamespacedKey.class, Keys::of,k-> "\"" + k.toString() + "\"");
+        SerializationHandler.registerHandler(CachedKey.class, Keys::cached, k-> "\"" + k.toString() + "\"");
         NMSHelper.init(Thread.currentThread().getContextClassLoader());
         instance=this;
         configs.add(FormationsConfig.instance);
-
-
-        Bukkit.getPluginManager().registerEvents(new AnvilCrushingHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new FormationHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new MossGrowthHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new EndCrystalExplosionHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new PistonEventHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new RandomTickHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new GrassBonemealingHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new TwerkSimHandler(),this);
-        Bukkit.getPluginManager().registerEvents(new StoneBonemealingHandler(),this);
+        configs.add(MossConfig.instance);
+        PluginController.reload();
         CommandMap map = Bukkit.getCommandMap();
         map.register("cswiki","cursedskyblock",new WikiCommand());
     }
@@ -61,6 +54,7 @@ public final class CursedSkyblock extends JavaPlugin {
         for (IPersistent config : configs) {
             config.load();
         }
+        PluginController.reload();
     }
 
     @Override

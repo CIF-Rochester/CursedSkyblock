@@ -1,5 +1,7 @@
 package cif.rochester.cursedskyblock.data;
 
+import cif.rochester.cursedskyblock.WeightedList;
+import cif.rochester.cursedskyblock.data.keys.WeightedKey;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 
@@ -14,6 +16,31 @@ public class Converter {
         if(object instanceof NamespacedKey){
             return (NamespacedKey) object;
         }
-        return null;
+        throw new RuntimeException("Cannot convert " + object.getClass() + " to a namespaced key!");
     }
+
+    public static <T> WeightedList<WeightedKey<T>> weightedKeys(Object... objects){
+        Integer weight = null;
+        NamespacedKey key = null;
+        WeightedList<WeightedKey<T>> list = new WeightedList<>();
+        for (Object object : objects) {
+            if (object instanceof Integer) {
+                weight = (Integer) object;
+            }
+            if (isKey(object)) {
+                key = namespacedKey(object);
+            }
+            if (weight != null && key != null) {
+                list.add(new WeightedKey<>(key, weight));
+                key = null;
+                weight = null;
+            }
+        }
+        return list;
+    }
+
+    private static boolean isKey(Object object) {
+        return object instanceof NamespacedKey || object instanceof Keyed || object instanceof String;
+    }
+
 }

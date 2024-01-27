@@ -1,9 +1,11 @@
 package cif.rochester.cursedskyblock.config;
 
-import cif.rochester.cursedskyblock.data.Formation;
-import cif.rochester.cursedskyblock.data.Keys;
 import cif.rochester.cursedskyblock.data.Matcher;
 import cif.rochester.cursedskyblock.data.NamespacedMap;
+import cif.rochester.cursedskyblock.data.keys.Keys;
+import cif.rochester.cursedskyblock.data.persistent.Formation;
+import cif.rochester.cursedskyblock.data.persistent.IValidatable;
+import cif.rochester.cursedskyblock.lib.ILogging;
 import com.vicious.viciouslib.persistence.IPersistent;
 import com.vicious.viciouslib.persistence.storage.aunotamations.LoadOnly;
 import com.vicious.viciouslib.persistence.storage.aunotamations.PersistentPath;
@@ -20,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 @LoadOnly
-public class FormationsConfig implements IPersistent {
+public class FormationsConfig implements IPersistent, ILogging {
     public static final FormationsConfig instance = new FormationsConfig();
     @PersistentPath
     public String path = "plugins/config/cursedskyblock/formations.txt";
@@ -28,6 +30,8 @@ public class FormationsConfig implements IPersistent {
     @Save
     public Set<Formation> formations = new HashSet<>();
 
+
+    //Key is associated with Material
     private final NamespacedMap<List<Formation>> formationMap = new NamespacedMap<>();
 
     public FormationsConfig(){
@@ -68,8 +72,11 @@ public class FormationsConfig implements IPersistent {
     public void load() {
         IPersistent.super.load();
         formationMap.clear();
+        IValidatable.revalidate(formations,bad->{
+            warn("Removing invalid formation instance. Block to replace no longer valid: " + bad.replaced);
+        });
         for (Formation formation : formations) {
-            List<Formation> options = formationMap.computeIfAbsent(formation.blockKey,k->new ArrayList<>());
+            List<Formation> options = formationMap.computeIfAbsent(formation.replaced.getKey(), k->new ArrayList<>());
             options.add(formation);
         }
     }

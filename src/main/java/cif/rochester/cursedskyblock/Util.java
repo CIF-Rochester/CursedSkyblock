@@ -2,12 +2,26 @@ package cif.rochester.cursedskyblock;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.type.CaveVinesPlant;
 
 public class Util {
+    private static BlockFace[] normals = new BlockFace[]{BlockFace.NORTH,BlockFace.SOUTH,BlockFace.EAST,BlockFace.WEST,BlockFace.UP,BlockFace.DOWN};
+
     public static Location findGround(Location location){
         while(isAir(location) && inBounds(location)){
             location = location.clone().add(0,-1,0);
+        }
+        return location;
+    }
+
+    public static Location findGround(Location location, int depth) {
+        int i = 0;
+        while(isAir(location) && inBounds(location) && i < depth){
+            location = location.clone().add(0,-1,0);
+            i++;
         }
         return location;
     }
@@ -63,5 +77,18 @@ public class Util {
         plant.setBerries(true);
         b.setBlockData(plant);
         fertilize(b.getLocation());
+    }
+
+    public static void setBlockDataAndFaces(Location location,BlockData data, BlockFace... blockFaces) {
+        if(data instanceof MultipleFacing){
+            for (BlockFace normal : normals) {
+                ((MultipleFacing) data).setFace(normal,false);
+            }
+            for (BlockFace blockFace : blockFaces) {
+                ((MultipleFacing) data).setFace(blockFace,true);
+            }
+        }
+        location.getBlock().setBlockData(data);
+
     }
 }

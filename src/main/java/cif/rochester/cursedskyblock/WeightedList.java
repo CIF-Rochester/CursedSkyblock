@@ -52,6 +52,9 @@ public class WeightedList<E extends IWeighted> extends ArrayList<E> {
     }
 
     public E getRandom(Random rand){
+        if(isEmpty()){
+            return null;
+        }
         int randInt = rand.nextInt(sum);
         for (E e : this) {
             randInt-=e.getWeight();
