@@ -2,6 +2,7 @@ package cif.rochester.cursedskyblock.handler;
 
 import cif.rochester.cursedskyblock.ChanceDrop;
 import cif.rochester.cursedskyblock.Util;
+import cif.rochester.cursedskyblock.lib.WorldPosI;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,6 +16,7 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -42,7 +44,15 @@ public class AnvilCrushingHandler implements Listener {
 
     private static final Random rand = new Random();
     private static final Map<Material, List<CrushResult>> crushResults = new EnumMap<>(Material.class);
-    static{
+    static {
+        //Snow and water to Ice
+        waterBatheResult(Material.SNOW_BLOCK,cauldron->{
+            cauldron.setType(Material.CAULDRON);
+            World w = cauldron.getWorld();
+            Location dropSpot = cauldron.getLocation();
+            w.dropItem(dropSpot.add(0.5, 0.5, 0.5), new ItemStack(Material.ICE));
+            return true;
+        });
         //Cobblestone to lava (Rare)
         juiceResult(Material.COBBLESTONE,cauldron->{
             Block furnace = cauldron.getLocation().add(0,-1,0).getBlock();
@@ -57,8 +67,36 @@ public class AnvilCrushingHandler implements Listener {
             }
             return false;
         });
+        //Deepslate to lava (Rare)
+        juiceResult(Material.COBBLED_DEEPSLATE,cauldron->{
+            Block furnace = cauldron.getLocation().add(0,-1,0).getBlock();
+            if(furnace.getType() == Material.BLAST_FURNACE){
+                Furnace f = (Furnace) furnace.getBlockData();
+                if(f.getLightEmission() > 0){
+                    if(rand.nextDouble(1.0) < 0.015){
+                        cauldron.setType(Material.LAVA_CAULDRON);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        });
+        //Netherrack to lava (Rare)
+        juiceResult(Material.NETHERRACK,cauldron->{
+            Block furnace = cauldron.getLocation().add(0,-1,0).getBlock();
+            if(furnace.getType() == Material.BLAST_FURNACE){
+                Furnace f = (Furnace) furnace.getBlockData();
+                if(f.getLightEmission() > 0){
+                    if(rand.nextDouble(1.0) < 0.02){
+                        cauldron.setType(Material.LAVA_CAULDRON);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        });
         //Sand to Cactus and sugar cane
-        ChanceDrop.ChanceList<Material> sandDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.CACTUS,0.05),ChanceDrop.of(Material.SUGAR_CANE,0.05));
+        ChanceDrop.ChanceList<Material> sandDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.CACTUS,0.05),ChanceDrop.of(Material.SUGAR_CANE,0.05),ChanceDrop.of(Material.KELP,0.05),ChanceDrop.of(Material.SEAGRASS,0.05),ChanceDrop.of(Material.SEA_PICKLE,0.05));
         juiceResult(Material.SAND,cauldron->{
             World w = cauldron.getWorld();
             Location dropSpot = cauldron.getLocation();
@@ -68,7 +106,7 @@ public class AnvilCrushingHandler implements Listener {
             return true;
         });
         //Dirt to various plants
-        ChanceDrop.ChanceList<Material> dirtDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.WHEAT_SEEDS,0.03),ChanceDrop.of(Material.FERN,0.01),ChanceDrop.of(Material.GRASS,0.01),ChanceDrop.of(Material.DEAD_BUSH,0.01),ChanceDrop.of(Material.BEETROOT_SEEDS,0.02),ChanceDrop.of(Material.SWEET_BERRIES,0.01));
+        ChanceDrop.ChanceList<Material> dirtDrops = ChanceDrop.ChanceList.of(ChanceDrop.of(Material.WHEAT_SEEDS,0.03),ChanceDrop.of(Material.FERN,0.01),ChanceDrop.of(Material.GRASS,0.01),ChanceDrop.of(Material.DEAD_BUSH,0.01),ChanceDrop.of(Material.BEETROOT_SEEDS,0.02), ChanceDrop.of(Material.MELON_SEEDS,0.01),ChanceDrop.of(Material.PUMPKIN_SEEDS,0.01),ChanceDrop.of(Material.SWEET_BERRIES,0.01));
         juiceResult(Material.DIRT,cauldron->{
             World w = cauldron.getWorld();
             Location dropSpot = cauldron.getLocation();
@@ -261,6 +299,24 @@ public class AnvilCrushingHandler implements Listener {
         };
         crushResults.computeIfAbsent(input,k->new ArrayList<>()).add(r);
     }
+    public static void waterBatheResult(Material input, Function<Block,Boolean> result){
+        CrushResult r = (l)->{
+            if(Util.inBounds(l.clone().add(0,-1,0))){
+                Block destination = l.clone().add(0,-1,0).getBlock();
+                if(destination.getType() == Material.WATER_CAULDRON){
+                    Levelled level  = (Levelled) destination.getBlockData();
+                    if(level.getLevel() == level.getMaximumLevel()) {
+                        if (result.apply(destination)) {
+                            l.getBlock().setType(Material.AIR);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        };
+        crushResults.computeIfAbsent(input,k->new ArrayList<>()).add(r);
+    }
 
     public static void varResult(Material result, Material... blocks){
         CrushResult r = (l)->{
@@ -334,8 +390,20 @@ public class AnvilCrushingHandler implements Listener {
         }
     }
 
+    private final Set<WorldPosI> bad = new HashSet<>();
+
+    @EventHandler
+    public void onPlayerBreakBlock(BlockBreakEvent bbe){
+        bad.add(new WorldPosI(bbe.getBlock().getLocation()));
+    }
+
     @EventHandler
     public void onFallingBlockDeath(ItemSpawnEvent event){
+        WorldPosI pos = new WorldPosI(event.getLocation());
+        if(bad.contains(pos)){
+            bad.remove(pos);
+            return;
+        }
         Item item = event.getEntity();
         ItemStack stack = item.getItemStack();
         Material type = stack.getType();

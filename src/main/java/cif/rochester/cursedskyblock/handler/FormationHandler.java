@@ -2,7 +2,7 @@ package cif.rochester.cursedskyblock.handler;
 
 import cif.rochester.cursedskyblock.config.FormationsConfig;
 import cif.rochester.cursedskyblock.config.MechanicsConfig;
-import cif.rochester.cursedskyblock.data.persistent.Formation;
+import cif.rochester.cursedskyblock.data.persistent.basic.Formation;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFormEvent;
 

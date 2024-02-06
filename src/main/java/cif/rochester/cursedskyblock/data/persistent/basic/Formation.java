@@ -1,4 +1,4 @@
-package cif.rochester.cursedskyblock.data.persistent;
+package cif.rochester.cursedskyblock.data.persistent.basic;
 
 import cif.rochester.cursedskyblock.WeightedList;
 import cif.rochester.cursedskyblock.data.Converter;
@@ -6,6 +6,7 @@ import cif.rochester.cursedskyblock.data.Matcher;
 import cif.rochester.cursedskyblock.data.keys.CachedKey;
 import cif.rochester.cursedskyblock.data.keys.Keys;
 import cif.rochester.cursedskyblock.data.keys.WeightedKey;
+import cif.rochester.cursedskyblock.data.persistent.IValidatable;
 import cif.rochester.cursedskyblock.lib.ILogging;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Typing;

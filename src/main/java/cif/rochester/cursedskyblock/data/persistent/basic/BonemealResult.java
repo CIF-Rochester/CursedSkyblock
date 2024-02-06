@@ -1,4 +1,4 @@
-package cif.rochester.cursedskyblock.data.persistent;
+package cif.rochester.cursedskyblock.data.persistent.basic;
 
 import cif.rochester.cursedskyblock.CursedSkyblock;
 import cif.rochester.cursedskyblock.Util;
@@ -7,6 +7,7 @@ import cif.rochester.cursedskyblock.data.Converter;
 import cif.rochester.cursedskyblock.data.keys.CachedKey;
 import cif.rochester.cursedskyblock.data.keys.Keys;
 import cif.rochester.cursedskyblock.data.keys.WeightedKey;
+import cif.rochester.cursedskyblock.data.persistent.IValidatable;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Typing;
 import org.bukkit.Location;
@@ -15,69 +16,25 @@ import org.bukkit.block.data.BlockData;
 
 import java.util.*;
 
-public class MossSpread extends LocationSpecific<MossSpread> implements IValidatable{
+@SuppressWarnings("unchecked")
+public abstract class BonemealResult<T extends BonemealResult<T>> extends Spread<T> implements IValidatable {
     @Save
     @Typing(CachedKey.class)
-    public List<CachedKey<BlockData>> blocksToReplace = new ArrayList<>();
-    @Save
-    public CachedKey<BlockData> replacement;
+    public List<CachedKey<BlockData>> surfaceBlocks = new ArrayList<>();
     @Save
     @Typing(WeightedKey.class)
     public WeightedList<WeightedKey<BlockData>> sproutedPlants = new WeightedList<>();
-    @Save
-    public int range = 4;
-    @Save
-    public int depth = 2;
-    @Save
-    public float chanceToSpread = 0.9F;
-    @Save
-    public float chanceToSprout = 0.35F;
-    @Save
-    public int priority;
 
-    public MossSpread(){
-        prioritizeSurfaceBiome=false;
-    }
-    public MossSpread(Object replacement){
-        this.replacement=Keys.cached(replacement);
-        prioritizeSurfaceBiome=false;
-    }
-
-    public MossSpread replace(Object... replacements){
-        for (Object replacement : replacements) {
-            blocksToReplace.add(Keys.cached(replacement));
+    public T surfaceBlocks(Object... surfaceBlocks){
+        for (Object replacement : surfaceBlocks) {
+            this.surfaceBlocks.add(Keys.cached(replacement));
         }
-        return this;
+        return (T)this;
     }
 
-    public MossSpread withSprouts(Object... weightedSprouts){
+    public T withSprouts(Object... weightedSprouts){
         sproutedPlants = Converter.weightedKeys(weightedSprouts);
-        return this;
-    }
-
-    public MossSpread withRange(int range){
-        this.range=range;
-        return this;
-    }
-
-    public MossSpread withDepth(int depth){
-        this.depth=depth;
-        return this;
-    }
-
-    public MossSpread withSpreadChance(float chance){
-        this.chanceToSpread=chance;
-        return this;
-    }
-
-    public MossSpread withSproutChance(float chance){
-        this.chanceToSprout=chance;
-        return this;
-    }
-
-    public MossSpread priority(int priority){
-        this.priority=priority;
-        return this;
+        return (T)this;
     }
 
     @Override
@@ -86,26 +43,24 @@ public class MossSpread extends LocationSpecific<MossSpread> implements IValidat
         for (int i = 0; i < sproutedPlants.size(); i++) {
             WeightedKey<BlockData> key = sproutedPlants.get(i);
             if(!key.cacheBlockData()){
-                CursedSkyblock.instance.getLogger().warning("Sprouted Block: " + key + " is now invalid (likely modded and no longer exists). It will be removed!");
+                CursedSkyblock.instance.getLogger().warning("Sprouted Block: " + key + " is now invalid (likely misspelled or modded and no longer exists). It will be removed!");
                 sproutedPlants.remove(i);
                 i--;
             }
         }
-        for (int i = 0; i < blocksToReplace.size(); i++) {
-            CachedKey<BlockData> key = blocksToReplace.get(i);
+        for (int i = 0; i < surfaceBlocks.size(); i++) {
+            CachedKey<BlockData> key = surfaceBlocks.get(i);
             if(!key.cacheBlockData()){
-                CursedSkyblock.instance.getLogger().warning("Replaced Block: " + key + " is now invalid (likely modded and no longer exists). It will be removed!");
-                blocksToReplace.remove(i);
+                CursedSkyblock.instance.getLogger().warning("Replaced Block: " + key + " is now invalid (likely misspelled or modded and no longer exists). It will be removed!");
+                surfaceBlocks.remove(i);
                 i--;
             }
         }
-        return replacement.cacheBlockData();
+        return !surfaceBlocks.isEmpty();
     }
 
-    private boolean canBeReplaced(Location location){
-        CachedKey<?> key = Keys.cached(location.getBlock().getType());
-        return blocksToReplace.contains(key) || replacement.equals(key);
-    }
+
+    public abstract void apply(Location location, Random rand);
 
     public void spread(Location location, Random rand){
         Location air = location.clone().add(0,1,0);
@@ -129,7 +84,7 @@ public class MossSpread extends LocationSpecific<MossSpread> implements IValidat
             return;
         }
         Location ground = Util.findGround(location,depth+1);
-        if(canBeReplaced(ground)) {
+        if(shouldApply(ground)) {
             apply(ground, rand);
         }
         range--;
@@ -137,13 +92,6 @@ public class MossSpread extends LocationSpecific<MossSpread> implements IValidat
         spreadRec(location.clone().add(-1,0,0),rand,range,visited);
         spreadRec(location.clone().add(0,0,1),rand,range,visited);
         spreadRec(location.clone().add(0,0,-1),rand,range,visited);
-    }
-
-
-    public void apply(Location location, Random rand){
-        location.getBlock().setBlockData(replacement.getCached());
-        Util.fertilize(location);
-        sprout(location,rand);
     }
 
     public void sprout(Location location, Random rand){
@@ -156,8 +104,11 @@ public class MossSpread extends LocationSpecific<MossSpread> implements IValidat
         }
     }
 
-    @Override
-    public String toString() {
-        return replacement.toString();
+    protected boolean shouldApply(Location location){
+        return shouldApply(Keys.cached(location.getBlock().getType()));
+    }
+
+    protected boolean shouldApply(CachedKey<?> key){
+        return surfaceBlocks.contains(key);
     }
 }

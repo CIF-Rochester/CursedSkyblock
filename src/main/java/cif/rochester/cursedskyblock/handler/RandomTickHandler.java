@@ -16,6 +16,7 @@ import org.bukkit.event.world.ChunkPopulateEvent;
  */
 public class RandomTickHandler implements Listener {
     private final BlockFace[] mossFaces = new BlockFace[]{BlockFace.EAST,BlockFace.WEST,BlockFace.SOUTH,BlockFace.NORTH};
+
     @EventHandler
     public void onRandomTick(ServerTickStartEvent event){
         //Handle random mossy cobblestone generation.

@@ -3,7 +3,7 @@ package cif.rochester.cursedskyblock.config;
 import cif.rochester.cursedskyblock.data.Matcher;
 import cif.rochester.cursedskyblock.data.NamespacedMap;
 import cif.rochester.cursedskyblock.data.keys.Keys;
-import cif.rochester.cursedskyblock.data.persistent.Formation;
+import cif.rochester.cursedskyblock.data.persistent.basic.Formation;
 import cif.rochester.cursedskyblock.data.persistent.IValidatable;
 import cif.rochester.cursedskyblock.lib.ILogging;
 import com.vicious.viciouslib.persistence.IPersistent;

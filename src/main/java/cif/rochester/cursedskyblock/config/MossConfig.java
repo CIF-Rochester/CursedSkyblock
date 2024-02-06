@@ -4,7 +4,7 @@ import cif.rochester.cursedskyblock.data.Matcher;
 import cif.rochester.cursedskyblock.data.NamespacedMap;
 import cif.rochester.cursedskyblock.data.keys.Keys;
 import cif.rochester.cursedskyblock.data.persistent.IValidatable;
-import cif.rochester.cursedskyblock.data.persistent.MossSpread;
+import cif.rochester.cursedskyblock.data.persistent.basic.MossSpread;
 import cif.rochester.cursedskyblock.lib.ILogging;
 import com.vicious.viciouslib.persistence.IPersistent;
 import com.vicious.viciouslib.persistence.storage.aunotamations.LoadOnly;
@@ -35,27 +35,27 @@ public class MossConfig implements IPersistent, ILogging {
         mossSpreads.add(new MossSpread(Material.CRIMSON_NYLIUM)
                 .addBiomes(Biome.CRIMSON_FOREST)
                 .setBiomeMatcher(Matcher.ONLY)
-                .replace(Material.NETHERRACK)
+                .surfaceBlocks(Material.NETHERRACK)
                 .withSprouts(Material.CRIMSON_ROOTS, 20, Material.CRIMSON_FUNGUS, 5, Material.WARPED_FUNGUS, 1));
         mossSpreads.add(new MossSpread(Material.WARPED_NYLIUM)
                 .addBiomes(Biome.WARPED_FOREST)
                 .setBiomeMatcher(Matcher.ONLY)
-                .replace(Material.NETHERRACK)
+                .surfaceBlocks(Material.NETHERRACK)
                 .withSprouts(Material.WARPED_ROOTS, 20, Material.WARPED_FUNGUS, 5, Material.CRIMSON_FUNGUS, 1));
         mossSpreads.add(new MossSpread(Material.MYCELIUM)
                 .addBiomes(Biome.MUSHROOM_FIELDS)
                 .setBiomeMatcher(Matcher.ONLY)
-                .replace(Material.GRASS_BLOCK,Material.DIRT)
+                .surfaceBlocks(Material.GRASS_BLOCK,Material.DIRT)
                 .withSprouts(Material.BROWN_MUSHROOM,5,Material.RED_MUSHROOM,5));
         mossSpreads.add(new MossSpread(Material.PODZOL)
                 .addBiomes(Biome.OLD_GROWTH_SPRUCE_TAIGA,Biome.OLD_GROWTH_PINE_TAIGA)
                 .setBiomeMatcher(Matcher.ONLY)
-                .replace(Material.GRASS_BLOCK,Material.DIRT)
+                .surfaceBlocks(Material.GRASS_BLOCK,Material.DIRT)
                 .withSprouts(Material.BROWN_MUSHROOM,5,Material.RED_MUSHROOM,5));
         mossSpreads.add(new MossSpread(Material.SCULK)
                 .addBiomes(Biome.DEEP_DARK)
                 .setBiomeMatcher(Matcher.ONLY)
-                .replace(Material.DEEPSLATE,Material.STONE)
+                .surfaceBlocks(Material.DEEPSLATE,Material.STONE)
                 .withSprouts(Material.SCULK_CATALYST,1,Material.SCULK_SHRIEKER,5,Material.SCULK_SENSOR,10,Material.SCULK_VEIN,30));
         load();
         save();

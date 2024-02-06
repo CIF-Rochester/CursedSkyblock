@@ -2,7 +2,7 @@ package cif.rochester.cursedskyblock.handler;
 
 import cif.rochester.cursedskyblock.config.MechanicsConfig;
 import cif.rochester.cursedskyblock.config.MossConfig;
-import cif.rochester.cursedskyblock.data.persistent.MossSpread;
+import cif.rochester.cursedskyblock.data.persistent.basic.MossSpread;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;

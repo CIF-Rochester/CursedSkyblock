@@ -26,12 +26,12 @@ public class StoneBonemealingHandler implements Listener {
                     if(b.getType() == Material.COBBLESTONE){
                         for (BlockFace mossFace : mossFaces) {
                             if(b.getRelative(mossFace).getType() == Material.WATER){
+                                stack.setAmount(stack.getAmount() - 1);
                                 if(Math.random() < 0.1) {
-                                    stack.setAmount(stack.getAmount() - 1);
                                     b.setType(Material.MOSSY_COBBLESTONE);
-                                    event.getPlayer().getInventory().setItem(event.getHand(), stack);
-                                    Util.fertilize(b.getLocation());
                                 }
+                                event.getPlayer().getInventory().setItem(event.getHand(), stack);
+                                Util.fertilize(b.getLocation());
                                 break;
                             }
                         }

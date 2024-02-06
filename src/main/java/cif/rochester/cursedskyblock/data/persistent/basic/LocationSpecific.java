@@ -1,4 +1,4 @@
-package cif.rochester.cursedskyblock.data.persistent;
+package cif.rochester.cursedskyblock.data.persistent.basic;
 
 import cif.rochester.cursedskyblock.data.Matcher;
 import cif.rochester.cursedskyblock.data.keys.Keys;

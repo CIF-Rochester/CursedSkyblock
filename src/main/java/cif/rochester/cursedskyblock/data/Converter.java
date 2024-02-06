@@ -4,11 +4,19 @@ import cif.rochester.cursedskyblock.WeightedList;
 import cif.rochester.cursedskyblock.data.keys.WeightedKey;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 
 public class Converter {
     public static NamespacedKey namespacedKey(Object object){
         if(object instanceof String){
             return NamespacedKey.fromString((String) object);
+        }
+        if(object instanceof BlockState){
+            return namespacedKey(((BlockState) object).getBlock());
+        }
+        if(object instanceof Block){
+            return namespacedKey(((Block) object).getType());
         }
         if(object instanceof Keyed){
             return ((Keyed) object).getKey();

@@ -12,4 +12,8 @@ public class MechanicsConfig {
     public boolean enableFormationOverrides = true;
     @Save(description = "Enables moss bonemealing overrides. Customize in mossspreads.txt")
     public boolean enableMossOverrides = true;
+    @Save(description = "Enables growing extra plants when bonemealing grass. Customize in grassmealing.txt")
+    public boolean enableGrassmealingBonuses = true;
+    @Save(description = "Enables explosion crafting. Customize in blastcrafting.txt")
+    public boolean enaableBlastCrafting = true;
 }
