@@ -1,7 +1,6 @@
 package cif.rochester.cursedskyblock;
 
 import cif.rochester.cursedskyblock.commands.WikiCommand;
-import cif.rochester.cursedskyblock.config.BlastCraftingConfig;
 import cif.rochester.cursedskyblock.config.FormationsConfig;
 import cif.rochester.cursedskyblock.config.MossConfig;
 import cif.rochester.cursedskyblock.data.keys.CachedKey;
@@ -45,7 +44,7 @@ public final class CursedSkyblock extends JavaPlugin {
         instance=this;
         configs.add(FormationsConfig.instance);
         configs.add(MossConfig.instance);
-        configs.add(BlastCraftingConfig.instance);
+        //configs.add(BlastCraftingConfig.instance);
         PluginController.reload();
         CommandMap map = Bukkit.getCommandMap();
         map.register("cswiki","cursedskyblock",new WikiCommand());

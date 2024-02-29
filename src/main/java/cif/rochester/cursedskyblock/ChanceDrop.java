@@ -35,7 +35,7 @@ public class ChanceDrop<T> {
         }
         public void roll(Random random, Consumer<T> consumer){
             for (ChanceDrop<T> drop : this) {
-                if(drop.chance < random.nextDouble(1.0)){
+                if(drop.chance > random.nextDouble(1.0)){
                     consumer.accept(drop.result);
                 }
             }

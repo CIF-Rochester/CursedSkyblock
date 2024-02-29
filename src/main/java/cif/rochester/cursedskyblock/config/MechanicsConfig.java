@@ -15,5 +15,5 @@ public class MechanicsConfig {
     @Save(description = "Enables growing extra plants when bonemealing grass. Customize in grassmealing.txt")
     public boolean enableGrassmealingBonuses = true;
     @Save(description = "Enables explosion crafting. Customize in blastcrafting.txt")
-    public boolean enaableBlastCrafting = true;
+    public boolean enableBlastCrafting = true;
 }

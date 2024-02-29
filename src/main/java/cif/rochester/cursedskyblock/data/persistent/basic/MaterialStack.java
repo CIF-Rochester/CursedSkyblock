@@ -10,6 +10,11 @@ public class MaterialStack {
     @Save
     public int size = 0;
 
+    public MaterialStack(Material material, int size){
+        this.material=material;
+        this.size=size;
+    }
+
     public boolean canDrain(ItemStack stack){
         if(stack.getType() == material){
             return stack.getAmount() >= size;

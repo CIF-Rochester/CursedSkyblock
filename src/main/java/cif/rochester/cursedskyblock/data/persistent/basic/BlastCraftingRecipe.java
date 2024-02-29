@@ -2,6 +2,7 @@ package cif.rochester.cursedskyblock.data.persistent.basic;
 
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Typing;
+import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
@@ -14,7 +15,7 @@ public class BlastCraftingRecipe {
     @Typing(MaterialStack.class)
     public List<MaterialStack> stacks = new ArrayList<>();
     @Save
-    public MaterialStack output = new MaterialStack();
+    public MaterialStack output = new MaterialStack(Material.AIR,0);
 
     public boolean matches(ItemStack... stacks){
         l1: for (MaterialStack materialStack : this.stacks) {

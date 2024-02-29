@@ -30,6 +30,6 @@ public class BlastCraftingHandler implements Handler {
 
     @Override
     public boolean isEnabled() {
-        return MechanicsConfig.instance.enaableBlastCrafting;
+        return MechanicsConfig.instance.enableBlastCrafting;
     }
 }
