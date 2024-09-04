@@ -25,12 +25,12 @@ public class NMSHelper {
     }
 
     //NMS
-    public static Class<?> World = DeepReflection.get("World","net.minecraft");
-    public static Class<?> BlockPosition = DeepReflection.get("BlockPosition","net.minecraft");
+    public static Class<?> World = DeepReflection.get("Level","net.minecraft");
+    public static Class<?> BlockPosition = DeepReflection.get("BlockPos","net.minecraft");
     public static Class<?> Block = DeepReflection.get("Block","net.minecraft");
-    public static Class<?> BlockPiston = DeepReflection.get("BlockPiston","net.minecraft");
-    public static Class<?> IBlockData = DeepReflection.get("IBlockData","net.minecraft");
-    public static Class EnumDirection = DeepReflection.get("EnumDirection","net.minecraft");
+    public static Class<?> BlockPiston = DeepReflection.get("PistonBaseBlock","net.minecraft");
+    public static Class<?> IBlockData = DeepReflection.get("BlockState","net.minecraft");
+    public static Class EnumDirection = DeepReflection.get("Direction","net.minecraft");
     //BUKKIT
     public static Class<?> CraftBlock = DeepReflection.get("CraftBlock","org.bukkit");
     //Methods
