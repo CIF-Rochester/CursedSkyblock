@@ -3,21 +3,21 @@ package cif.rochester.cursedskyblock.config;
 import cif.rochester.cursedskyblock.data.persistent.basic.BlastCraftingRecipe;
 import cif.rochester.cursedskyblock.data.persistent.basic.MaterialStack;
 import com.vicious.viciouslib.persistence.IPersistent;
+import com.vicious.viciouslib.persistence.storage.aunotamations.PersistentPath;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Typing;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
-import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class BlastCraftingConfig implements IPersistent {
     public static BlastCraftingConfig instance = new BlastCraftingConfig();
+
+    @PersistentPath
+    public String path = "plugins/config/cursedskyblock/blastcrafting.txt";
 
     @Save
     @Typing(BlastCraftingRecipe.class)
@@ -124,19 +124,20 @@ public class BlastCraftingConfig implements IPersistent {
         }
     }
 
-    public static BlastCraftingRecipe getRecipe(Item... entities){
+    public static Object[] getRecipe(Item... entities){
         ItemStack[] stacks = new ItemStack[entities.length];
         for (int i = 0; i < entities.length; i++) {
             stacks[i]=entities[i].getItemStack();
         }
         for (ItemStack stack : stacks) {
-            List<BlastCraftingRecipe> lst = instance.recipeMap.get(stack.getType());
+            List<BlastCraftingRecipe> lst = instance.recipeMap.getOrDefault(stack.getType(),new ArrayList<>());
             for (BlastCraftingRecipe recipe : lst) {
-                if(recipe.matches(stacks)){
-                    return recipe;
+                int n = recipe.calculateNumberOfRecipes(stacks);
+                if(n > 0){
+                    return new Object[]{recipe,n};
                 }
             }
         }
-        return null;
+        return new Object[]{null,0};
     }
 }

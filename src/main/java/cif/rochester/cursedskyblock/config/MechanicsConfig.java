@@ -1,9 +1,10 @@
 package cif.rochester.cursedskyblock.config;
 
+import com.vicious.viciouslib.persistence.IPersistent;
 import com.vicious.viciouslib.persistence.storage.aunotamations.PersistentPath;
 import com.vicious.viciouslib.persistence.storage.aunotamations.Save;
 
-public class MechanicsConfig {
+public class MechanicsConfig implements IPersistent {
     public static final MechanicsConfig instance = new MechanicsConfig();
     @PersistentPath
     public String path = "plugins/config/cursedskyblock/mechanics.txt";
@@ -16,4 +17,9 @@ public class MechanicsConfig {
     public boolean enableGrassmealingBonuses = true;
     @Save(description = "Enables explosion crafting. Customize in blastcrafting.txt")
     public boolean enableBlastCrafting = true;
+
+    private MechanicsConfig(){
+        load();
+        save();
+    }
 }
